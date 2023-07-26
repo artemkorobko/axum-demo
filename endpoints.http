@@ -1,4 +1,7 @@
 @address = localhost:8080
 
-### Test
+### Root path returns 404
 GET http://{{address}}/
+
+### Health check
+GET http://{{address}}/health
