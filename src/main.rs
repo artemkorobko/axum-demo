@@ -1,6 +1,17 @@
+use std::net::SocketAddr;
+
+use structopt::StructOpt;
+
+mod options;
+mod routes;
+mod server;
+
 #[tokio::main]
-async fn main() {
+async fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
     env_logger::init();
-    log::info!("Hello, world!");
+    let opts = options::Options::from_args();
+    let addr = SocketAddr::new(opts.ip, opts.port);
+    let routes = routes::build();
+    server::start(&addr, routes).await
 }
