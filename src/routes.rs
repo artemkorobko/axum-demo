@@ -1,7 +1,7 @@
-use axum::{routing, Router};
+use axum::Router;
 
 mod health;
 
 pub fn build() -> Router {
-    Router::new().route("/health", routing::get(health::handle))
+    Router::new().merge(health::route())
 }
