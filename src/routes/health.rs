@@ -45,7 +45,7 @@ mod tests {
 
         assert_eq!(response.status(), http::StatusCode::OK);
         let response_body = response.data().await.unwrap().unwrap();
-        let expected_body = "{\"service\":\"axum-test\",\"version\":\"0.1.0\"}";
+        let expected_body = r#"{"service":"axum-test","version":"0.1.0"}"#;
         assert_eq!(response_body, expected_body);
     }
 }
