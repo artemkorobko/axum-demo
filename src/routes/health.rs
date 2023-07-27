@@ -1,26 +1,9 @@
-use axum::{response::IntoResponse, routing, Json, Router};
+use axum::{routing, Router};
 
-#[derive(serde::Serialize)]
-struct Response<'a> {
-    service: &'a str,
-    version: &'a str,
-}
-
-impl<'a> Response<'a> {
-    pub fn from_env() -> Self {
-        Self {
-            service: std::env!("CARGO_PKG_NAME"),
-            version: std::env!("CARGO_PKG_VERSION"),
-        }
-    }
-}
+use crate::handlers;
 
 pub fn route() -> Router {
-    Router::new().route("/health", routing::get(handle))
-}
-
-async fn handle() -> impl IntoResponse {
-    Json(Response::from_env())
+    Router::new().route("/health", routing::get(handlers::health::handle))
 }
 
 #[cfg(test)]
