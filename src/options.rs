@@ -9,4 +9,7 @@ pub struct Options {
     /// Listener's port
     #[structopt(short, long, default_value = "8080")]
     pub port: u16,
+    /// Users database capacity
+    #[structopt(short, long, default_value = "100")]
+    pub users: usize,
 }

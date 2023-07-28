@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct Entry {
+pub struct UserEntry {
     pub id: Uuid,
     pub email: String,
     pub password: String,
@@ -16,8 +16,8 @@ struct Credentials {
 }
 
 impl Credentials {
-    fn into_entry(&self, id: Uuid) -> Entry {
-        Entry {
+    fn into_entry(&self, id: Uuid) -> UserEntry {
+        UserEntry {
             id,
             email: self.email.clone(),
             password: self.password.clone(),
@@ -40,7 +40,7 @@ impl Users {
         }
     }
 
-    pub fn create<E, P>(&mut self, email: E, password: P) -> anyhow::Result<Entry>
+    pub fn create<E, P>(&mut self, email: E, password: P) -> anyhow::Result<UserEntry>
     where
         E: Into<String>,
         P: Into<String>,
@@ -58,13 +58,13 @@ impl Users {
             .ok_or(anyhow::anyhow!("Failed to create user"))
     }
 
-    pub fn find_by_id(&self, id: &Uuid) -> Option<Entry> {
+    pub fn find_by_id(&self, id: &Uuid) -> Option<UserEntry> {
         self.entries
             .get(&id)
             .map(|creds| creds.into_entry(id.clone()))
     }
 
-    pub fn find_by_email<E>(&self, email: E) -> Option<Entry>
+    pub fn find_by_email<E>(&self, email: E) -> Option<UserEntry>
     where
         E: Into<String>,
     {
