@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use structopt::StructOpt;
 
+mod database;
 mod handlers;
 mod options;
 mod routes;
