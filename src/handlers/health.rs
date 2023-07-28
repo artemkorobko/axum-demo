@@ -15,6 +15,7 @@ impl<'a> Response<'a> {
     }
 }
 
+#[axum::debug_handler]
 pub async fn handle() -> impl IntoResponse {
     Json(Response::from_env())
 }

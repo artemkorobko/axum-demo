@@ -1,9 +1,10 @@
 use axum::Router;
 
+mod auth;
 mod health;
 
 pub fn build() -> Router {
-    Router::new().merge(health::route())
+    Router::new().merge(auth::route()).merge(health::route())
 }
 
 #[cfg(test)]

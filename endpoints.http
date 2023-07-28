@@ -5,3 +5,12 @@ GET http://{{address}}/
 
 ### Health check
 GET http://{{address}}/health
+
+### Login request
+POST http://{{address}}/login
+content-type: application/json
+
+{
+    "username": "test",
+    "password": "test"
+}
