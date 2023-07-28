@@ -1,13 +1,18 @@
+use std::sync::Arc;
+
 use axum::Router;
+
+use crate::database;
 
 mod auth;
 mod health;
 mod user;
 
-pub fn build() -> Router {
+pub fn build(users: database::Users) -> Router {
+    let users_ptr = Arc::new(users);
     Router::new()
-        .merge(user::route())
-        .merge(auth::route())
+        .merge(user::route(users_ptr.clone()))
+        .merge(auth::route(users_ptr))
         .merge(health::route())
 }
 
@@ -23,13 +28,14 @@ mod tests {
 
     #[tokio::test]
     async fn root_path_returns_404() {
+        let users = database::Users::default();
         let request = http::Request::builder()
             .uri("/")
             .method(http::Method::GET)
             .body(Body::empty())
             .unwrap();
 
-        let mut response = build().oneshot(request).await.unwrap();
+        let mut response = build(users).oneshot(request).await.unwrap();
 
         assert_eq!(response.status(), http::StatusCode::NOT_FOUND);
         assert!(response.data().await.is_none());

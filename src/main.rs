@@ -15,6 +15,6 @@ async fn main() -> anyhow::Result<()> {
     let opts = options::Options::from_args();
     let users = database::Users::with_capacity(opts.users);
     let addr = SocketAddr::new(opts.ip, opts.port);
-    let routes = routes::build();
+    let routes = routes::build(users);
     server::start(&addr, routes).await
 }

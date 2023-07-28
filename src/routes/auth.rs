@@ -1,7 +1,11 @@
+use std::sync::Arc;
+
 use axum::{routing, Router};
 
-use crate::handlers;
+use crate::{database, handlers};
 
-pub fn route() -> Router {
-    Router::new().route("/login", routing::post(handlers::user::login::handle))
+pub fn route(users: Arc<database::Users>) -> Router {
+    Router::new()
+        .route("/login", routing::post(handlers::user::login::handle))
+        .with_state(users)
 }
