@@ -6,11 +6,20 @@ GET http://{{address}}/
 ### Health check
 GET http://{{address}}/health
 
+### Create user
+POST http://{{address}}/user
+content-type: application/json
+
+{
+    "email": "some@domain.net",
+    "password": "test_password"
+}
+
 ### Login request
 POST http://{{address}}/login
 content-type: application/json
 
 {
-    "username": "test",
+    "email": "test",
     "password": "test"
 }

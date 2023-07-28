@@ -1,10 +1,6 @@
 use axum::{response::IntoResponse, Json};
 
-#[derive(serde::Deserialize)]
-pub struct Credentials {
-    username: String,
-    password: String,
-}
+use crate::handlers::user::create::Credentials;
 
 #[axum::debug_handler]
 pub async fn handle(_creds: Json<Credentials>) -> impl IntoResponse {
