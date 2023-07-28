@@ -119,7 +119,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-test"
+name = "axum-demo"
 version = "0.1.0"
 dependencies = [
  "anyhow",
