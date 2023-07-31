@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use axum::Router;
 
@@ -9,7 +9,7 @@ mod health;
 mod user;
 
 pub fn build(users: database::Users) -> Router {
-    let users_ptr = Arc::new(users);
+    let users_ptr = Arc::new(RwLock::new(users));
     Router::new()
         .merge(user::route(users_ptr.clone()))
         .merge(auth::route(users_ptr))
