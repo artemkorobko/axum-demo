@@ -16,7 +16,7 @@ struct Credentials {
 }
 
 impl Credentials {
-    fn into_entry(&self, id: Uuid) -> UserEntry {
+    fn as_entry(&self, id: Uuid) -> UserEntry {
         UserEntry {
             id,
             email: self.email.clone(),
@@ -59,9 +59,7 @@ impl Users {
     }
 
     pub fn find_by_id(&self, id: &Uuid) -> Option<UserEntry> {
-        self.entries
-            .get(&id)
-            .map(|creds| creds.into_entry(id.clone()))
+        self.entries.get(id).map(|creds| creds.as_entry(*id))
     }
 
     pub fn find_by_email<E>(&self, email: E) -> Option<UserEntry>
@@ -69,9 +67,7 @@ impl Users {
         E: Into<String>,
     {
         let id = self.emails.get(&email.into())?;
-        self.entries
-            .get(&id)
-            .map(|creds| creds.into_entry(id.clone()))
+        self.entries.get(id).map(|creds| creds.as_entry(*id))
     }
 
     fn generate_id(&self) -> Uuid {
