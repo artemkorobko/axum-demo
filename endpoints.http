@@ -20,6 +20,15 @@ POST http://{{address}}/login
 content-type: application/json
 
 {
-    "email": "test",
-    "password": "test"
+    "email": "some@domain.net",
+    "password": "test_password"
+}
+
+### Invalid login request
+POST http://{{address}}/login
+content-type: application/json
+
+{
+    "email": "invalid@domain.net",
+    "password": "invalid"
 }

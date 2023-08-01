@@ -6,8 +6,8 @@ use crate::database;
 
 #[derive(serde::Deserialize)]
 pub struct Credentials {
-    email: String,
-    password: String,
+    pub email: String,
+    pub password: String,
 }
 
 #[axum::debug_handler]
