@@ -16,23 +16,30 @@ pub async fn handle(
     creds: Json<Credentials>,
 ) -> impl IntoResponse {
     if let Ok(mut db) = users.write() {
-        if can_register_email(&db, &creds.email) {
-            match db.create(&creds.email, &creds.password) {
-                Ok(_) => StatusCode::CREATED,
-                Err(err) => {
-                    log::error!("{}", err);
-                    StatusCode::INTERNAL_SERVER_ERROR
-                }
-            }
-        } else {
-            StatusCode::CONFLICT
-        }
+        try_create_user(&mut db, &creds)
     } else {
         log::error!("Faild to get write access to users database");
         StatusCode::INTERNAL_SERVER_ERROR
     }
 }
 
+fn try_create_user(db: &mut database::Users, creds: &Credentials) -> StatusCode {
+    if can_register_email(db, &creds.email) {
+        create_user(db, &creds)
+    } else {
+        StatusCode::CONFLICT
+    }
+}
+
 fn can_register_email(db: &database::Users, email: &str) -> bool {
     db.find_by_email(email).is_none()
+}
+
+fn create_user(db: &mut database::Users, creds: &Credentials) -> StatusCode {
+    if let Err(err) = db.create(&creds.email, &creds.password) {
+        log::error!("{}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    } else {
+        StatusCode::CREATED
+    }
 }
