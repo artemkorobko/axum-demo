@@ -10,17 +10,21 @@ pub async fn handle(
     creds: Json<Credentials>,
 ) -> impl IntoResponse {
     if let Ok(db) = users.write() {
-        if let Some(user) = db.find_by_email(&creds.email) {
-            if user.password == creds.password {
-                StatusCode::OK
-            } else {
-                StatusCode::UNAUTHORIZED
-            }
+        authenticate(&db, &creds)
+    } else {
+        log::error!("Faild to get read access to users database");
+        StatusCode::INTERNAL_SERVER_ERROR
+    }
+}
+
+fn authenticate(db: &database::Users, creds: &Credentials) -> StatusCode {
+    if let Some(user) = db.find_by_email(&creds.email) {
+        if user.password == creds.password {
+            StatusCode::OK
         } else {
             StatusCode::UNAUTHORIZED
         }
     } else {
-        log::error!("Faild to get read access to users database");
-        StatusCode::INTERNAL_SERVER_ERROR
+        StatusCode::UNAUTHORIZED
     }
 }
