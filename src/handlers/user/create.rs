@@ -43,3 +43,27 @@ fn create_user(db: &mut database::Users, creds: &Credentials) -> StatusCode {
         StatusCode::CREATED
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use axum::http;
+    use tower::ServiceExt;
+
+    use crate::{database, routes};
+
+    #[tokio::test]
+    async fn create_user() {
+        let users = database::Users::default();
+        let request = routes::tests::create_json_post_request(
+            "/user",
+            serde_json::json!({
+                "email": "test_email",
+                "password": "test_password",
+            }),
+        );
+
+        let response = routes::build(users).oneshot(request).await.unwrap();
+
+        assert_eq!(response.status(), http::StatusCode::CREATED);
+    }
+}

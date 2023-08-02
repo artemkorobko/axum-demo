@@ -17,7 +17,7 @@ pub fn build(users: database::Users) -> Router {
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use axum::{
         body::{Body, HttpBody},
         http,
@@ -39,5 +39,14 @@ mod tests {
 
         assert_eq!(response.status(), http::StatusCode::NOT_FOUND);
         assert!(response.data().await.is_none());
+    }
+
+    pub fn create_json_post_request(uri: &str, payload: serde_json::Value) -> http::Request<Body> {
+        http::Request::builder()
+            .uri(uri)
+            .method(http::Method::POST)
+            .header(http::header::CONTENT_TYPE, "application/json")
+            .body(Body::from(payload.to_string()))
+            .expect("Failed to create POST request")
     }
 }
