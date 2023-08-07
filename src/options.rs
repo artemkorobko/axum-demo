@@ -48,18 +48,20 @@ mod tests {
     }
 
     #[rstest]
-    #[case("-i", "invalid")]
-    #[case("--ip", "invalid")]
-    fn return_invalid_ip_argument_error(#[case] key: &str, #[case] value: &str) {
+    #[case("-i", "invalid", "invalid value 'invalid' for '--ip <IP>'")]
+    #[case(
+        "--ip",
+        "255.x.255.255",
+        "invalid value '255.x.255.255' for '--ip <IP>'"
+    )]
+    fn return_invalid_ip_argument_error(#[case] key: &str, #[case] value: &str, #[case] msg: &str) {
         let cmd = &[APP_BINARY_NAME, key, value];
 
         let err = Options::try_parse_from(cmd)
             .err()
             .expect("Invalid address should not be parsed");
 
-        assert!(err
-            .to_string()
-            .contains("invalid value 'invalid' for '--ip <IP>': invalid IP address syntax"));
+        assert!(err.to_string().contains(msg));
     }
 
     #[rstest]
@@ -71,6 +73,23 @@ mod tests {
         let options = Options::try_parse_from(cmd).expect("Failed to parse port argument");
 
         assert_eq!(options.port, expected);
+    }
+
+    #[rstest]
+    #[case("-p", "invalid", "invalid value 'invalid' for '--port <PORT>'")]
+    #[case("--port", "-10", "unexpected argument '-1' found")]
+    fn return_invalid_port_argument_error(
+        #[case] key: &str,
+        #[case] value: &str,
+        #[case] msg: &str,
+    ) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let err = Options::try_parse_from(cmd)
+            .err()
+            .expect("Invalid post should not be parsed");
+
+        assert!(err.to_string().contains(msg));
     }
 
     #[rstest]
