@@ -6,8 +6,8 @@ pub struct Options {
     /// Listener's IP address
     #[arg(short, long, default_value = "0.0.0.0")]
     pub ip: IpAddr,
-    /// Listener's port
-    #[arg(short, long, default_value = "8080")]
+    /// Listener's port in range of 80..49150
+    #[arg(short, long, default_value = "8080", value_parser = clap::value_parser!(u16).range(80..49151))]
     pub port: u16,
     /// Users database capacity
     #[arg(short, long, default_value = "100")]
@@ -78,6 +78,8 @@ mod tests {
     #[rstest]
     #[case("-p", "invalid", "invalid value 'invalid' for '--port <PORT>'")]
     #[case("--port", "-10", "unexpected argument '-1' found")]
+    #[case("-p", "0", "0 is not in 80..49151")]
+    #[case("-p", "65535", "65535 is not in 80..49151")]
     fn return_invalid_port_argument_error(
         #[case] key: &str,
         #[case] value: &str,
