@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use structopt::StructOpt;
+use clap::Parser;
 
 mod database;
 mod handlers;
@@ -12,7 +12,7 @@ mod server;
 async fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
     env_logger::init();
-    let opts = options::Options::from_args();
+    let opts = options::Options::parse();
     let users = database::Users::with_capacity(opts.users);
     let addr = SocketAddr::new(opts.ip, opts.port);
     let routes = routes::build(users);
