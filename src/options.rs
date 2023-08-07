@@ -10,7 +10,7 @@ pub struct Options {
     #[arg(short, long, default_value = "8080", value_parser = clap::value_parser!(u16).range(80..49151))]
     pub port: u16,
     /// Users database capacity
-    #[arg(short, long, default_value = "100")]
+    #[arg(short, long, default_value = "100", value_parser = clap::value_parser!(u16).range(10..1000))]
     pub users: usize,
 }
 
@@ -108,6 +108,8 @@ mod tests {
     #[rstest]
     #[case("-u", "invalid", "invalid value 'invalid' for '--users <USERS>'")]
     #[case("--users", "-10", "unexpected argument '-1' found")]
+    #[case("-u", "0", "0 is not in 10..1000")]
+    #[case("-u", "5000", "5000 is not in 10..1000")]
     fn return_invalid_users_argument_error(
         #[case] key: &str,
         #[case] value: &str,
