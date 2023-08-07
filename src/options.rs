@@ -46,4 +46,15 @@ mod tests {
 
         assert_eq!(options.ip, expected);
     }
+
+    #[rstest]
+    #[case("-p", "3000", 3000)]
+    #[case("--port", "4000", 4000)]
+    fn parse_port_argument(#[case] key: &str, #[case] value: &str, #[case] expected: u16) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let options = Options::try_parse_from(cmd).expect("Failed to parse port argument");
+
+        assert_eq!(options.port, expected);
+    }
 }
