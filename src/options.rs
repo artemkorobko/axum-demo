@@ -48,6 +48,21 @@ mod tests {
     }
 
     #[rstest]
+    #[case("-i", "invalid")]
+    #[case("--ip", "invalid")]
+    fn return_invalid_ip_argument_error(#[case] key: &str, #[case] value: &str) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let err = Options::try_parse_from(cmd)
+            .err()
+            .expect("Invalid address should not be parsed");
+
+        assert!(err
+            .to_string()
+            .contains("invalid value 'invalid' for '--ip <IP>': invalid IP address syntax"));
+    }
+
+    #[rstest]
     #[case("-p", "3000", 3000)]
     #[case("--port", "4000", 4000)]
     fn parse_port_argument(#[case] key: &str, #[case] value: &str, #[case] expected: u16) {
