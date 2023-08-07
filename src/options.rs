@@ -19,6 +19,7 @@ mod tests {
     use std::net::Ipv4Addr;
 
     use clap::Parser;
+    use rstest::rstest;
 
     use super::*;
 
@@ -33,5 +34,16 @@ mod tests {
         assert_eq!(options.ip, Ipv4Addr::new(0, 0, 0, 0));
         assert_eq!(options.port, 8080);
         assert_eq!(options.users, 100);
+    }
+
+    #[rstest]
+    #[case("-i", "127.0.0.1", Ipv4Addr::new(127, 0, 0, 1))]
+    #[case("--ip", "192.168.0.1", Ipv4Addr::new(192, 168, 0, 1))]
+    fn parse_ip_address(#[case] key: &str, #[case] value: &str, #[case] expected: Ipv4Addr) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let options = Options::try_parse_from(cmd).expect("Failed to parse ip address argument");
+
+        assert_eq!(options.ip, expected);
     }
 }
