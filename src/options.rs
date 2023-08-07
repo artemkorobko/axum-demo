@@ -57,4 +57,15 @@ mod tests {
 
         assert_eq!(options.port, expected);
     }
+
+    #[rstest]
+    #[case("-u", "10", 10)]
+    #[case("--users", "20", 20)]
+    fn parse_users_argument(#[case] key: &str, #[case] value: &str, #[case] expected: usize) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let options = Options::try_parse_from(cmd).expect("Failed to parse users argument");
+
+        assert_eq!(options.users, expected);
+    }
 }
