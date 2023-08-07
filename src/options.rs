@@ -59,7 +59,7 @@ mod tests {
 
         let err = Options::try_parse_from(cmd)
             .err()
-            .expect("Invalid address should not be parsed");
+            .expect("Invalid address argument should not be parsed");
 
         assert!(err.to_string().contains(msg));
     }
@@ -87,7 +87,7 @@ mod tests {
 
         let err = Options::try_parse_from(cmd)
             .err()
-            .expect("Invalid post should not be parsed");
+            .expect("Invalid post argument should not be parsed");
 
         assert!(err.to_string().contains(msg));
     }
@@ -101,5 +101,22 @@ mod tests {
         let options = Options::try_parse_from(cmd).expect("Failed to parse users argument");
 
         assert_eq!(options.users, expected);
+    }
+
+    #[rstest]
+    #[case("-u", "invalid", "invalid value 'invalid' for '--users <USERS>'")]
+    #[case("--users", "-10", "unexpected argument '-1' found")]
+    fn return_invalid_users_argument_error(
+        #[case] key: &str,
+        #[case] value: &str,
+        #[case] msg: &str,
+    ) {
+        let cmd = &[APP_BINARY_NAME, key, value];
+
+        let err = Options::try_parse_from(cmd)
+            .err()
+            .expect("Invalid users argument should not be parsed");
+
+        assert!(err.to_string().contains(msg));
     }
 }
