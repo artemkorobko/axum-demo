@@ -39,10 +39,10 @@ mod tests {
     #[rstest]
     #[case("-i", "127.0.0.1", Ipv4Addr::new(127, 0, 0, 1))]
     #[case("--ip", "192.168.0.1", Ipv4Addr::new(192, 168, 0, 1))]
-    fn parse_ip_address(#[case] key: &str, #[case] value: &str, #[case] expected: Ipv4Addr) {
+    fn parse_ip_argument(#[case] key: &str, #[case] value: &str, #[case] expected: Ipv4Addr) {
         let cmd = &[APP_BINARY_NAME, key, value];
 
-        let options = Options::try_parse_from(cmd).expect("Failed to parse ip address argument");
+        let options = Options::try_parse_from(cmd).expect("Failed to parse ip argument");
 
         assert_eq!(options.ip, expected);
     }
