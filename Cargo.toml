@@ -6,13 +6,18 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 axum = { version = "0.6", features = ["macros"] }
+chrono = "0.4.26"
 clap = { version = "4.3", features = ["derive"] }
 dotenv = "0.15"
 env_logger = "0.10"
+lazy_static = "1.4"
 log = "0.4"
+r2d2 = "0.8.10"
+r2d2_sqlite = { version = "0.22", features = ["bundled"] }
+refinery = { version = "0.8", features = ["rusqlite"] }
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.29", features = ["macros", "rt-multi-thread", "signal"] }
-uuid = { version = "1.4.1", features = ["v4"] }
+uuid = { version = "1.4", features = ["v4"] }
 
 [dev-dependencies]
 rstest = { version = "0.18", default-features = false }
