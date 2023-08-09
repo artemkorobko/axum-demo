@@ -3,6 +3,9 @@ use std::ops::Deref;
 use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
 
+use super::repository;
+
+#[derive(Clone)]
 pub struct ConnectionPool(Pool<SqliteConnectionManager>);
 
 impl Deref for ConnectionPool {
@@ -26,6 +29,10 @@ impl ConnectionPool {
 
     pub fn connection(&self) -> Result<Connection, r2d2::Error> {
         self.0.get().map(Connection)
+    }
+
+    pub fn login_repository(&self) -> Result<repository::Login, r2d2::Error> {
+        self.connection().map(repository::Login::from)
     }
 }
 
