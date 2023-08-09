@@ -1,8 +1,12 @@
 pub mod connection;
+pub mod datetime;
 pub mod repository;
 pub mod users;
+pub mod uuid;
 
+pub use self::uuid::Uuid;
 pub use connection::{Connection, ConnectionPool};
+pub use datetime::DateTimeUtc;
 pub use users::{UserEntry, Users};
 
 refinery::embed_migrations!("migrations");
