@@ -30,10 +30,6 @@ impl ConnectionPool {
     pub fn connection(&self) -> Result<Connection, r2d2::Error> {
         self.0.get().map(Connection)
     }
-
-    pub fn login_repository(&self) -> Result<repository::Login, r2d2::Error> {
-        self.connection().map(repository::Login::from)
-    }
 }
 
 pub struct Connection(PooledConnection<SqliteConnectionManager>);
@@ -49,5 +45,11 @@ impl Deref for Connection {
 
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+
+impl Connection {
+    pub fn login_repository(self) -> repository::Login {
+        repository::Login::from(self)
     }
 }
